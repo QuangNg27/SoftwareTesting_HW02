@@ -12,7 +12,8 @@ Tôi sử dụng AI trợ lý (Gemini) để hỗ trợ phân tích miền, phâ
 | **FR05** | Xem danh sách & Tìm kiếm sản phẩm | - Trang chủ hiển thị danh sách tất cả sản phẩm dạng lưới (grid).<br>- Mỗi sản phẩm hiển thị: Ảnh (tỷ lệ chuẩn, có alt text mô tả), Tên sản phẩm, Giá (đơn vị: ₫, định dạng phân cách hàng nghìn).<br>- Thanh tìm kiếm tìm theo tên sản phẩm. Từ khóa tìm kiếm phải được hiển thị an toàn (không render HTML).<br>- Khi đang tải dữ liệu phải hiển thị trạng thái loading.<br>- Khi không có kết quả tìm kiếm phải hiển thị thông báo empty state phù hợp.<br>- Trang chủ chỉ có đúng một thẻ `<h1>`.<br>- Mỗi trang chỉ có 1 `<h1>` duy nhất. |
 | **FR-09** | Mã Giảm Giá (Coupon) | Tại bước Checkout, người dùng có thể nhập mã giảm giá. Hệ thống áp dụng giảm giá dựa trên 5 điều kiện (Mã tồn tại, Còn hạn sử dụng, Đủ ngưỡng đơn hàng, Đã đăng nhập, Chưa dùng hết lượt) theo loại phần trăm hoặc cố định. |
 | **FR-14** | Quản lý Danh mục (Category CRUD) | Admin có thể Thêm / Xem / Xóa danh mục. Tên danh mục là bắt buộc, không được để trống. |
-| **[Feature_D]** | *[Chọn 1 tính năng từ Pool D (Mobile)]* | *Sẽ bổ sung trong quá trình thực hiện.* |
+| **FR-20** | Thanh toán (Checkout) | - Chỉ người dùng đã đăng nhập mới tiến hành thanh toán được.<br>- Tổng tiền thanh toán được tính tự động từ giỏ hàng và không cho phép người dùng chỉnh sửa trực tiếp.<br>- Giao diện hiển thị đầy đủ danh sách sản phẩm đặt mua.<br>- Backend phải tự tính lại tổng tiền; không chấp nhận giá trị `total_amount` do client gửi lên.<br>- Sau thanh toán thành công, giỏ hàng được xóa. |
+
 
 ---
 
@@ -20,37 +21,60 @@ Tôi sử dụng AI trợ lý (Gemini) để hỗ trợ phân tích miền, phâ
 
 ### 3.1. Tính năng FR-05: Xem danh sách & Tìm kiếm sản phẩm
 
-#### 3.1.1. Phân tích Miền (Domain Testing) cho FR-05
+#### 3.1.1. Phân tích Lớp tương đương (Equivalence Classes) cho FR-05
 
 *   **Bước 1: Xác định biến Đầu vào (Input) & Đầu ra (Output)**
     *   **Đầu vào:** `searchQuery` (Kiểu dữ liệu: Chuỗi ký tự - String. Độ dài $L$ từ $0$ đến $255$ ký tự).
     *   **Đầu ra:** Giao diện danh sách dạng lưới (Grid) hiển thị đầy đủ thông tin sản phẩm (ảnh có `alt`, tên, giá bán dạng `₫` phân tách hàng nghìn), trạng thái Loading, màn hình Empty State khi không tìm thấy kết quả, hiển thị từ khóa an toàn không render HTML, SEO chỉ chứa đúng duy nhất một thẻ `<h1>` trên trang chủ.
 *   **Bước 2: Xác định các Lớp Tương đương (Equivalence Classes)**
     *   `EC01` (Hợp lệ): Chuỗi trống ($L = 0$). Mong đợi hiển thị toàn bộ sản phẩm.
-    *   `EC02` (Hợp lệ): Tên sản phẩm tồn tại hoàn toàn hoặc một phần (Ví dụ: `"iPhone"`). Mong đợi hiển thị danh sách sản phẩm khớp.
-    *   `EC03` (Hợp lệ): Tên sản phẩm không tồn tại (Ví dụ: `"Nokia 1280"`). Mong đợi hiển thị Empty State.
-    *   `EC04` (Hợp lệ): Chuỗi tìm kiếm chứa khoảng trắng thừa (Ví dụ: `"   iPhone   "`). Mong đợi trim khoảng trắng và tìm bình thường.
-    *   `EC05` (Độc hại): Chuỗi chứa mã độc HTML/Script (Ví dụ: `"<img src=x onerror=alert('XSS')>"`). Mong đợi escape HTML hiển thị dạng text an toàn.
-    *   `EC06` (Độc hại): Chuỗi chứa mã độc SQL Injection (Ví dụ: `"iPhone' OR 1=1 --"`). Mong đợi xử lý Parameterized Query an toàn.
-    *   `EC07` (Không hợp lệ): Chuỗi có độ dài cực lớn ($L > 255$ ký tự). Mong đợi chặn nhập, tự động cắt chuỗi hoặc báo lỗi an toàn.
+    *   `EC02` (Hợp lệ): Tên sản phẩm tồn tại hoàn toàn hoặc một phần. Mong đợi hiển thị danh sách sản phẩm khớp.
+    *   `EC03` (Hợp lệ): Tên sản phẩm không tồn tại trong hệ thống. Mong đợi hiển thị Empty State.
+    *   `EC04` (Hợp lệ): Chuỗi tìm kiếm chứa khoảng trắng thừa ở hai đầu. Mong đợi hệ thống tự động loại bỏ khoảng trắng và tìm kiếm bình thường.
+    *   `EC05` (Độc hại): Chuỗi chứa mã độc HTML/Script (XSS Injection). Mong đợi escape HTML hiển thị dạng văn bản thuần an toàn.
+    *   `EC06` (Độc hại): Chuỗi chứa mã độc SQL Injection. Mong đợi xử lý Parameterized Query an toàn.
+    *   `EC07` (Không hợp lệ): Chuỗi tìm kiếm có độ dài vượt giới hạn tối đa ($L > 255$ ký tự). Mong đợi chặn nhập, tự động cắt chuỗi hoặc báo lỗi an toàn.
 *   **Bước 3: Tìm giá trị Đại diện Tốt nhất (Best Representatives)**
     *   Chọn từ khóa đại diện tiêu biểu cho các lớp tương đương không có thứ tự và áp dụng BVA cho lớp tương đương có thứ tự (độ dài chuỗi $L$).
+*   **Bước 4: Tạo Dữ liệu Kiểm thử (Test Data)**
+
+| ID | Input | Expected Output (Đầu ra mong đợi) | Phủ EP |
+| :---: | :--- | :--- | :--- |
+| 1 | `searchQuery = ""` (Chuỗi trống) | 1. Trang chủ hiển thị danh sách tất cả sản phẩm dạng lưới (Grid).<br>2. Mỗi sản phẩm hiển thị đủ: Ảnh (thẻ `<img>` phải chứa thuộc tính `alt` mô tả hình ảnh rõ ràng), Tên, Giá (đơn vị: ₫, định dạng phân cách hàng nghìn).<br>3. Trang chủ chỉ chứa duy nhất một thẻ `<h1>`. | `EC01` (Hợp lệ) |
+| 2 | `searchQuery = "iPhone 15 Pro Max"` hoặc `searchQuery = "S"` | 1. Chỉ hiển thị sản phẩm khớp hoàn toàn hoặc khớp một phần trên lưới.<br>2. Từ khóa tìm kiếm hiển thị tương ứng trên màn hình. | `EC02` (Hợp lệ) |
+| 3 | `searchQuery = "Nokia 1280"` | 1. Không hiển thị sản phẩm nào.<br>2. Hiển thị màn hình Empty State có hình ảnh minh họa và thông báo phù hợp. | `EC03` (Hợp lệ) |
+| 4 | `searchQuery = "   iPhone 15 Pro Max   "` | 1. Tự động loại bỏ khoảng trắng ở hai đầu từ khóa.<br>2. Tìm ra và hiển thị sản phẩm tương ứng. | `EC04` (Hợp lệ) |
+| 5 | `searchQuery = "<img src=x onerror=alert('XSS')>"` | 1. Tuyệt đối không có alert xuất hiện.<br>2. Từ khóa tìm kiếm hiển thị an toàn trên giao diện dưới dạng chuỗi thuần túy (không render HTML). | `EC05` (Độc hại) |
+| 6 | `searchQuery = "iPhone' OR '1'='1' --"` hoặc `searchQuery = "'; DROP TABLE products; --"` | 1. CSDL không bị lỗi, không bị drop table, hệ thống không crash.<br>2. API trả về danh sách trống hoặc chỉ hiển thị sản phẩm nếu tên chứa đúng chuỗi đó theo nghĩa đen. | `EC06` (Độc hại) |
+| 7 | Chuỗi dài 256 ký tự (vượt giới hạn) | Ô nhập liệu giới hạn không cho phép nhập ký tự thứ 256 (`maxlength=255`) HOẶC nếu hệ thống cho phép nhập thì khi nhấn tìm kiếm, hệ thống sẽ tự động cắt ngắn chuỗi còn 255 ký tự hoặc báo lỗi đầu vào không hợp lệ một cách an toàn mà không làm crash ứng dụng. | `EC07` (Không hợp lệ) |
+| 8 | Gửi request tìm kiếm (ví dụ: `searchQuery = "iPhone"`) khi mạng chậm | Trong thời gian chờ phản hồi từ API, màn hình phải hiển thị trạng thái đang tải dữ liệu rõ ràng (Loading spinner/indicator). | Trạng thái Loading (Loading State) |
+| 9 | Nhấn phím Tab liên tục từ thanh địa chỉ | Thứ tự tiêu điểm di chuyển một cách tuần tự từ trên xuống dưới, từ trái sang phải, không nhảy cóc hoặc bỏ sót phần tử tương tác chính. | Phím Tab (Tab Order) |
 
 #### 3.1.2. Phân tích Giá trị Biên (BVA) cho FR-05
 Giới hạn độ dài chuỗi tìm kiếm đầu vào: $0 \le L \le 255$.
 *   **Biên dưới ($LB = 0$):**
-    *   $L = 0$ (LB): Chuỗi rỗng `""` $\rightarrow$ Hiện tất cả sản phẩm.
-    *   $L = 1$ (LB+1): Chuỗi 1 ký tự, ví dụ `"i"` $\rightarrow$ Tìm sản phẩm khớp một phần.
+    *   $L = 0$ (LB): Chuỗi tìm kiếm rỗng (độ dài bằng 0).
+    *   $L = 1$ (LB+1): Chuỗi tìm kiếm có độ dài bằng 1 ký tự.
 *   **Biên trên ($UB = 255$):**
-    *   $L = 254$ (UB-1): Chuỗi dài 254 ký tự $\rightarrow$ Xử lý bình thường (Empty State).
-    *   $L = 255$ (UB): Chuỗi dài 255 ký tự $\rightarrow$ Xử lý bình thường (Empty State).
-    *   $L = 256$ (UB+1): Chuỗi dài 256 ký tự $\rightarrow$ Cắt chuỗi/chặn nhập hoặc báo lỗi đầu vào.
+    *   $L = 254$ (UB-1): Chuỗi tìm kiếm có độ dài bằng 254 ký tự.
+    *   $L = 255$ (UB): Chuỗi tìm kiếm có độ dài bằng 255 ký tự.
+    *   $L = 256$ (UB+1): Chuỗi tìm kiếm có độ dài bằng 256 ký tự (vượt biên).
+
+* Tạo Dữ liệu Kiểm thử (Test Data) cho BVA:
+
+| ID | Input | Expected Output (Đầu ra mong đợi) | Phủ BVA |
+| :---: | :--- | :--- | :--- |
+| 1 | `searchQuery = ""` (Chuỗi trống, $L=0$) | 1. Trang chủ hiển thị danh sách tất cả sản phẩm dạng lưới (Grid).<br>2. Mỗi sản phẩm hiển thị đủ: Ảnh, Tên, Giá (đơn vị: ₫, định dạng phân cách hàng nghìn).<br>3. Trang chủ chỉ chứa duy nhất một thẻ `<h1>`. | `LB` ($L=0$) |
+| 2 | `searchQuery = "S"` (Chuỗi 1 ký tự, $L=1$) | 1. Hiển thị tất cả sản phẩm có tên chứa chữ "S" hoặc "s".<br>2. Các sản phẩm khác không khớp bị ẩn đi. | `LB+1` ($L=1$) |
+| 3 | Chuỗi ngẫu nhiên dài 254 ký tự ($L=254$) | 1. Hệ thống tiếp nhận chuỗi tìm kiếm bình thường không báo lỗi.<br>2. Trả về kết quả tìm kiếm Empty State. | `UB-1` ($L=254$) |
+| 4 | Chuỗi ngẫu nhiên dài 255 ký tự ($L=255$) | 1. Hệ thống tiếp nhận chuỗi tìm kiếm bình thường.<br>2. Trả về kết quả tìm kiếm Empty State. | `UB` ($L=255$) |
+| 5 | Chuỗi dài 256 ký tự ($L=256$, vượt giới hạn) | Ô nhập liệu giới hạn không cho phép nhập ký tự thứ 256 (`maxlength=255`) HOẶC nếu hệ thống cho phép nhập thì tự động cắt ngắn chuỗi còn 255 ký tự hoặc báo lỗi đầu vào không hợp lệ một cách an toàn mà không làm crash ứng dụng. | `UB+1` ($L=256$) |
 
 ---
 
 ### 3.2. Tính năng FR-09: Mã Giảm Giá (Coupon)
 
-#### 3.2.1. Phân tích Miền (Domain Testing) cho FR-09
+#### 3.2.1. Phân tích Lớp tương đương (Equivalence Classes) cho FR-09
 
 *   **Bước 1: Xác định biến Đầu vào (Input) & Đầu ra (Output)**
     *   **Đầu vào:**
@@ -82,6 +106,18 @@ Giới hạn độ dài chuỗi tìm kiếm đầu vào: $0 \le L \le 255$.
         *   `EC14` (Hợp lệ - Biên): Loại cố định có giá trị giảm lớn hơn hoặc bằng tổng tiền đơn hàng (`discount_value >= orderTotal`).
 *   **Bước 3: Tìm giá trị Đại diện Tốt nhất (Best Representatives)**
     *   Sử dụng các mã giảm giá thực tế có trong hệ thống làm giá trị đại diện: `SAVE10` (10%, tối thiểu 300,000 ₫), `BIGBUY` (cố định 50,000 ₫, tối thiểu 500,000 ₫), `VIP100` (cố định 100,000 ₫, tối thiểu 300,000 ₫, tối đa 2 lần/người) và `EXPIRED` (hết hạn).
+*   **Bước 4: Tạo Dữ liệu Kiểm thử (Test Data)**
+
+| ID | couponCode | orderTotal | isLoggedIn | userUsageCount | Expected Output (Đầu ra mong đợi) | Phủ EP |
+| :---: | :--- | :--- | :--- | :--- | :--- | :--- |
+| 1 | `"SAVE10"` | `350,000 ₫` | `True` | `0` | 1. Mã giảm giá được áp dụng thành công.<br>2. Hiển thị số tiền tiết kiệm là 10% của tổng tiền.<br>3. Số tiền thanh toán cuối cùng bằng tổng tiền trừ đi tiền tiết kiệm. | `EC01`, `EC04`, `EC06`, `EC08`, `EC10`, `EC12` (Hợp lệ) |
+| 2 | `"BIGBUY"` | `500,000 ₫` | `True` | `0` | 1. Mã giảm giá được áp dụng thành công.<br>2. Hiển thị số tiền giảm giá là 50,000 ₫.<br>3. Số tiền thanh toán cuối cùng = tổng tiền - 50,000 ₫. | `EC01`, `EC04`, `EC06`, `EC08`, `EC10`, `EC13` (Hợp lệ) |
+| 3 | `"INVALID999"` | `300,000 ₫` | `True` | `0` | 1. Hệ thống hiển thị thông báo lỗi: "Mã giảm giá không tồn tại".<br>2. Không áp dụng giảm giá, tổng số tiền thanh toán giữ nguyên. | `EC03` (Không hợp lệ) |
+| 4 | `"SAVE10"` (đã bị vô hiệu hóa) | `350,000 ₫` | `True` | `0` | 1. Hệ thống hiển thị thông báo lỗi: "Mã giảm giá đã bị vô hiệu hóa".<br>2. Không áp dụng giảm giá, tổng tiền thanh toán giữ nguyên. | `EC02` (Không hợp lệ) |
+| 5 | `"EXPIRED"` (hết hạn ngày `2020-01-01`) | `150,000 ₫` | `True` | `0` | 1. Hệ thống hiển thị thông báo lỗi: "Mã giảm giá đã hết hạn sử dụng".<br>2. Không áp dụng giảm giá, tổng tiền thanh toán giữ nguyên. | `EC05` (Không hợp lệ) |
+| 6 | `"SAVE10"` | `300,000 ₫` | `False` | `0` | Hệ thống yêu cầu đăng nhập trước khi checkout / không cho áp dụng mã giảm giá và hiển thị thông báo lỗi yêu cầu đăng nhập. | `EC09` (Không hợp lệ) |
+| 7 | `"SUPERFIX"` (giảm cố định `400,000 ₫`) | `300,000 ₫` | `True` | `0` | 1. Mã được áp dụng thành công.<br>2. Số tiền thanh toán cuối cùng hiển thị tối thiểu là 0 ₫ (không hiển thị số tiền âm). | `EC14` (Hợp lệ - Biên) |
+| 8 | `"  VIP100  "` | `350,000 ₫` | `True` | `0` | 1. Hệ thống tự động cắt bỏ các khoảng trắng thừa ở đầu và cuối.<br>2. Mã giảm giá được áp dụng thành công. | `EC01` (Hợp lệ) |
 
 #### 3.2.2. Phân tích Giá trị Biên (BVA) cho FR-09
 
@@ -97,11 +133,21 @@ Giới hạn độ dài chuỗi tìm kiếm đầu vào: $0 \le L \le 255$.
         *   **Biên chạm giới hạn:** `userUsageCount = 2` (Đã dùng 2 lần, hết lượt) $\rightarrow$ Báo lỗi.
         *   **Chưa dùng:** `userUsageCount = 0` (Còn nguyên 2 lượt) $\rightarrow$ Áp dụng thành công.
 
+*   **Tạo Dữ liệu Kiểm thử (Test Data) cho BVA:**
+
+| ID | couponCode | orderTotal | isLoggedIn | userUsageCount | Expected Output (Đầu ra mong đợi) | Phủ BVA |
+| :---: | :--- | :--- | :--- | :--- | :--- | :--- |
+| 1 | `"SAVE10"` | `299,000 ₫` | `True` | `0` | 1. Hệ thống hiển thị thông báo lỗi: "Đơn hàng chưa đạt giá trị tối thiểu".<br>2. Không áp dụng giảm giá, tổng tiền thanh toán giữ nguyên. | Dưới biên C3 (`orderTotal = 299,000 ₫` < `300,000 ₫`) |
+| 2 | `"SAVE10"` | `300,000 ₫` | `True` | `0` | 1. Mã giảm giá được áp dụng thành công.<br>2. Hiển thị số tiền giảm giá là 30,000 ₫.<br>3. Số tiền thanh toán cuối cùng hiển thị là 270,000 ₫. | Biên C3 (`orderTotal = 300,000 ₫` = `300,000 ₫`) |
+| 3 | `"SAVE10"` | `350,000 ₫` | `True` | `1` | 1. Hệ thống hiển thị thông báo lỗi: "Bạn đã hết lượt sử dụng mã giảm giá này".<br>2. Không áp dụng giảm giá, tổng tiền thanh toán giữ nguyên. | Biên chạm giới hạn C5 (`userUsageCount = 1` = `max_uses_per_user = 1`) |
+| 4 | `"VIP100"` | `500,000 ₫` | `True` | `1` | 1. Mã giảm giá được áp dụng thành công.<br>2. Hiển thị số tiền giảm giá là 100,000 ₫.<br>3. Số tiền thanh toán cuối cùng hiển thị là 400,000 ₫. | Dưới biên C5 (`userUsageCount = 1` < `max_uses_per_user = 2`) |
+
+
 ---
 
 ### 3.3. Tính năng FR-14: Quản lý Danh mục (Category CRUD)
 
-#### 3.3.1. Phân tích Miền (Domain Testing) cho FR-14
+#### 3.3.1. Phân tích Lớp tương đương (Equivalence Classes) cho FR-14
 
 *   **Bước 1: Xác định biến Đầu vào (Input) & Đầu ra (Output)**
     *   **Đầu vào:**
@@ -123,6 +169,19 @@ Giới hạn độ dài chuỗi tìm kiếm đầu vào: $0 \le L \le 255$.
         *   `EC08` (Biên/Ràng buộc dữ liệu): Danh mục đang chứa sản phẩm liên kết (hệ thống xử lý an toàn, chặn xóa hoặc xóa cascade/mất liên kết).
 *   **Bước 3: Tìm giá trị Đại diện Tốt nhất (Best Representatives)**
     *   Sử dụng các chuỗi đại diện hợp lệ, rỗng, khoảng trắng và các mã độc để nhập vào form quản lý danh mục. Thao tác trên các danh mục không có sản phẩm liên kết và danh mục đang có sản phẩm để kiểm tra chức năng xóa.
+*   **Bước 4: Tạo Dữ liệu Kiểm thử (Test Data)**
+
+| ID | categoryName | categoryId | isCategoryLinkedToProducts | Expected Output (Đầu ra mong đợi) | Phủ EP |
+| :---: | :--- | :--- | :--- | :--- | :--- |
+| 1 | `"Sách"` | `N/A` | `N/A` | 1. Danh mục `"Sách"` được thêm thành công.<br>2. Danh sách danh mục cập nhật thêm `"Sách"`. | `EC01` (Hợp lệ) |
+| 2 | `""` (Trống) | `N/A` | `N/A` | Hệ thống hiển thị thông báo lỗi yêu cầu nhập tên danh mục và không cho phép lưu. | `EC02` (Không hợp lệ) |
+| 3 | `"   "` (Khoảng trắng) | `N/A` | `N/A` | Hệ thống tự động trim khoảng trắng thừa, nhận diện tên rỗng và báo lỗi. | `EC03` (Không hợp lệ) |
+| 4 | `"<img src=x onerror=alert('XSS')>"` | `N/A` | `N/A` | 1. Danh mục được thêm thành công.<br>2. Không có hộp thoại alert nào xuất hiện.<br>3. Tên danh mục hiển thị an toàn dưới dạng text thuần túy. | `EC05` (Độc hại) |
+| 5 | `"Category' OR '1'='1' --"` | `N/A` | `N/A` | 1. Tên danh mục lưu nguyên văn chuỗi trong CSDL.<br>2. Cơ sở dữ liệu hoạt động bình thường, không lỗi cú pháp SQL. | `EC06` (Độc hại) |
+| 6 | `N/A` (Xem danh sách) | `N/A` | `N/A` | Hệ thống hiển thị đầy đủ danh sách các danh mục hiện có trong cơ sở dữ liệu. | Thao tác Xem (Hợp lệ) |
+| 7 | `N/A` (Thao tác Xóa) | `123` | `False` | 1. Danh mục được xóa thành công khỏi hệ thống.<br>2. Danh mục không còn xuất hiện trong danh sách hiển thị. | `EC07` (Hợp lệ) |
+| 8 | `N/A` (Thao tác Xóa) | `456` | `True` | Hệ thống ngăn chặn hành động xóa và hiển thị thông báo lỗi ràng buộc để bảo vệ tính toàn vẹn dữ liệu. | `EC08` (Ràng buộc) |
+| 9 | `"Laptop"` (Đã tồn tại) | `N/A` | `N/A` | Hệ thống kiểm tra và thông báo lỗi trùng lặp tên danh mục, không cho phép lưu danh mục trùng. | `EC04` (Không hợp lệ) |
 
 #### 3.3.2. Phân tích Giá trị Biên (BVA) cho FR-14
 Áp dụng BVA cho độ dài tên danh mục (`L`):
@@ -133,14 +192,75 @@ Giới hạn độ dài chuỗi tìm kiếm đầu vào: $0 \le L \le 255$.
     *   `L = 255` (Chạm biên trên hợp lệ): Chuỗi dài 255 ký tự $\rightarrow$ Thêm thành công.
     *   `L = 256` (Vượt biên trên): Chuỗi dài 256 ký tự $\rightarrow$ Chặn nhập hoặc tự động cắt còn 255 ký tự hoặc báo lỗi.
 
+*   **Tạo Dữ liệu Kiểm thử (Test Data) cho BVA:**
+
+| ID | categoryName | categoryId | isCategoryLinkedToProducts | Expected Output (Đầu ra mong đợi) | Phủ BVA |
+| :---: | :--- | :--- | :--- | :--- | :--- |
+| 1 | Chuỗi dài 255 ký tự | `N/A` | `N/A` | Danh mục được thêm thành công và tên được hiển thị đầy đủ, không gây lỗi giao diện. | Biên trên hợp lệ (`L = 255`) |
+| 2 | Chuỗi dài 256 ký tự | `N/A` | `N/A` | Hệ thống giới hạn không cho phép nhập ký tự thứ 256 HOẶC tự động cắt ngắn chuỗi còn 255 ký tự HOẶC thông báo lỗi. | Vượt biên trên không hợp lệ (`L = 256`) |
+
+
 ---
 
-### 3.4. Tính năng [Feature_D]
-*(Sẽ bổ sung chi tiết phân tích miền và biên sau khi lựa chọn tính năng)*
+### 3.4. Tính năng FR-20: Thanh toán (Checkout)
+
+#### 3.4.1. Phân tích Lớp tương đương (Equivalence Classes) cho FR-20 (Thanh toán)
+
+*   **Bước 1: Xác định biến Đầu vào (Input) & Đầu ra (Output)**
+    *   **Đầu vào:**
+        *   `isLoggedIn` (Kiểu dữ liệu: Boolean. Trạng thái đăng nhập của người dùng).
+        *   `cartItems` (Kiểu dữ liệu: Danh sách đối tượng. Các sản phẩm và số lượng tương ứng trong giỏ hàng).
+        *   `clientTotalAmount` (Kiểu dữ liệu: Số thực dương - Float. Giá trị tổng tiền do Client gửi lên).
+    *   **Đầu ra:**
+        *   Thông báo đặt hàng thành công, xóa sạch giỏ hàng khỏi database/giao diện, và tạo bản ghi đơn hàng mới có giá trị `total_amount` do backend tự tính toán HOẶC yêu cầu người dùng đăng nhập/báo lỗi giỏ hàng trống.
+*   **Bước 2: Xác định các Lớp Tương đương (Equivalence Classes)**
+    *   **Trạng thái đăng nhập (`isLoggedIn`):**
+        *   `EC01` (Hợp lệ): Người dùng đã đăng nhập (có Token JWT hợp lệ).
+        *   `EC02` (Không hợp lệ): Người dùng chưa đăng nhập (khách vãng lai).
+    *   **Trạng thái giỏ hàng (`cartItems`):**
+        *   `EC03` (Hợp lệ): Giỏ hàng có ít nhất 1 sản phẩm.
+        *   `EC04` (Không hợp lệ): Giỏ hàng trống.
+    *   **Số lượng sản phẩm trong giỏ (`cartItem.quantity`):**
+        *   `EC05` (Hợp lệ): Số lượng sản phẩm là số nguyên dương ($quantity \ge 1$).
+    *   **Tổng tiền Client gửi lên (`clientTotalAmount`):**
+        *   `EC06` (Hợp lệ): Khớp với tổng tiền do Backend tự tính toán.
+        *   `EC07` (Không hợp lệ - Thao túng): Sai lệch so với tổng tiền do Backend tự tính toán.
+*   **Bước 3: Tìm giá trị Đại diện Tốt nhất (Best Representatives)**
+    *   Chọn tài khoản test và danh sách các sản phẩm cụ thể để thực hiện quy trình checkout.
+*   **Bước 4: Tạo Dữ liệu Kiểm thử (Test Data)**
+
+| ID | isLoggedIn | cartItems | clientTotalAmount | Expected Output (Đầu ra mong đợi) | Phủ EP |
+| :---: | :--- | :--- | :--- | :--- | :--- |
+| 1 | `True` | `[1 chiếc iPhone 15 Pro Max]` | `30,000,000 ₫` | 1. Màn hình Checkout hiển thị đầy đủ danh sách sản phẩm, số lượng, đơn giá và tổng thanh toán.<br>2. Ứng dụng đặt hàng thành công, hiển thị Toast/Popup thông báo đặt hàng thành công hoặc chuyển hướng sang màn hình Xác nhận đơn hàng.<br>3. Giỏ hàng trên ứng dụng được cập nhật trống (0 sản phẩm). | `EC01`, `EC03`, `EC05`, `EC06` (Hợp lệ) |
+| 2 | `False` | `[1 chiếc iPhone 15]` | `25,000,000 ₫` | 1. Ứng dụng chặn không cho điều hướng và tự động chuyển người dùng về màn hình Đăng nhập (hoặc hiển thị Popup yêu cầu đăng nhập).<br>2. Request gửi lên API checkout từ ứng dụng di động trả về mã lỗi 401/403. | `EC02` (Không hợp lệ) |
+| 3 | `True` | `[1 chiếc iPhone 15]` | `25,000,000 ₫` (cố chỉnh sửa trên UI) | 1. Trường tổng tiền hiển thị dạng text tĩnh, không cho phép focus.<br>2. Bàn phím ảo không xuất hiện và người dùng không thể nhập liệu thay đổi giá trị. | Kiểm tra thuộc tính chỉ đọc (Hợp lệ) |
+| 4 | `True` | `[1 chiếc iPhone 15 Pro Max]` | `1,000 ₫` (thao túng) | Backend bỏ qua giá trị client gửi lên và tự động tính toán từ giỏ hàng trong cơ sở dữ liệu, ghi nhận đơn hàng với giá trị thực tế là 30,000,000 ₫ (hoặc từ chối yêu cầu do sai lệch thông tin). | `EC07` (Không hợp lệ - Thao túng) |
+| 5 | `True` | `[]` (Trống) | `0 ₫` | 1. Nút "Thanh toán" ở màn hình Giỏ hàng hiển thị ở trạng thái vô hiệu hóa (disabled) không thể chạm vào.<br>2. Ứng dụng chặn điều hướng đến màn hình Checkout và hiển thị màn hình Empty State của Giỏ hàng. | `EC04` (Không hợp lệ) |
+
+#### 3.4.2. Phân tích Giá trị Biên (BVA) cho FR-20 (Thanh toán)
+
+Áp dụng BVA cho các biến định lượng có ngưỡng giới hạn:
+1.  **Số lượng sản phẩm trong giỏ (`quantity`):**
+    *   Giới hạn biên dưới hợp lệ: `quantity = 1`.
+        *   **Biên dưới không hợp lệ (`LB - 1`):** `quantity = 0` $\rightarrow$ Không cho phép đặt sản phẩm có số lượng bằng 0.
+        *   **Biên dưới hợp lệ (`LB`):** `quantity = 1` $\rightarrow$ Thực hiện checkout thành công.
+        *   **Cận biên dưới hợp lệ (`LB + 1`):** `quantity = 2` $\rightarrow$ Thực hiện checkout thành công.
+2.  **Tổng số tiền đơn hàng (`total_amount`):**
+    *   Giới hạn biên dưới: `total_amount > 0` ₫.
+        *   **Biên dưới không hợp lệ:** `total_amount = 0` ₫ (Giỏ hàng trống) $\rightarrow$ Không cho phép nhấn nút thanh toán.
+        *   **Biên dưới hợp lệ:** `total_amount > 0` ₫ $\rightarrow$ Cho phép thực hiện thanh toán.
+
+*   **Tạo Dữ liệu Kiểm thử (Test Data) cho BVA:**
+
+| ID | isLoggedIn | cartItems | clientTotalAmount | Expected Output (Đầu ra mong đợi) | Phủ BVA |
+| :---: | :--- | :--- | :--- | :--- | :--- |
+| 1 | `True` | `[SP A (SL: 1), SP B (SL: 2)]` | `[Tổng tiền tương ứng]` | 1. Màn hình Checkout hiển thị đúng số lượng sản phẩm A là 1 và B là 2.<br>2. Ứng dụng đặt hàng thành công và giỏ hàng được xóa sạch. | Biên dưới số lượng sản phẩm (`quantity = 1` và `quantity = 2`) |
+
+
 
 ---
 
-## 4. Kịch bản Kiểm thử Chi tiết (Test Cases Table)
+## 4. Kịch bản Kiểm thử Chi tiết (Test Cases)
 
 ### 4.1. Kịch bản kiểm thử cho FR-05: Xem danh sách & Tìm kiếm sản phẩm
 
@@ -200,5 +320,15 @@ Giới hạn độ dài chuỗi tìm kiếm đầu vào: $0 \le L \le 255$.
 
 ---
 
-### 4.4. Kịch bản kiểm thử cho [Feature_D]
-*(Sẽ bổ sung trong quá trình thực hiện)*
+### 4.4. Kịch bản kiểm thử cho FR-20: Thanh toán (Checkout)
+
+| Function/Feature ID | Case ID | Test case name | Pre-requisites / Conditions | Test step | Expected Result (ER) | Actual Result | Status | Tester | Tested Date |
+| :---: | :---: | :--- | :--- | :--- | :--- | :--- | :---: | :--- | :---: |
+| FR-20 | TC-FR20-001 | Thanh toán thành công đơn hàng hợp lệ (EC01, EC03, EC05, EC06) | Người dùng đã đăng nhập tài khoản test. Giỏ hàng đã có ít nhất 1 sản phẩm. | 1. Mở ứng dụng di động EShop, đăng nhập.<br>2. Tại màn hình Giỏ hàng, chọn nút "Tiến hành thanh toán".<br>3. Quan sát giao diện màn hình Checkout.<br>4. Chọn nút "Xác nhận thanh toán". | 1. Màn hình Checkout hiển thị đầy đủ danh sách sản phẩm, số lượng, đơn giá và tổng thanh toán.<br>2. Ứng dụng thanh toán thành công, hiển thị thông báo thanh toán thành công.<br>3. Giỏ hàng trên ứng dụng được cập nhật trống (0 sản phẩm). | Kết quả giống ER | Pass | NMQuang | 02-07-2026 |
+| FR-20 | TC-FR20-002 | Chặn truy cập và thanh toán khi chưa đăng nhập (EC02) | Người dùng chưa đăng nhập hệ thống (khách vãng lai). | 1. Thêm sản phẩm vào giỏ hàng.<br>2. Trên màn hình Giỏ hàng, bấm nút "Tiến hành thanh toán". | Ứng dụng hiện thông báo yêu cầu đăng nhập và tự động chuyển người dùng về màn hình Đăng nhập. | Kết quả giống ER | Pass | NMQuang | 02-07-2026 |
+| FR-20 | TC-FR20-003 | Kiểm tra trường tổng tiền là chỉ đọc (Read-only) trên giao diện | Người dùng đã đăng nhập tài khoản test. Giỏ hàng đã có sản phẩm. | 1. Điều hướng đến màn hình Checkout trên ứng dụng di động.<br>2. Tìm trường hiển thị "Tổng thanh toán" trên màn hình.<br>3. Chạm liên tục vào trường tổng tiền và quan sát bàn phím ảo (virtual keyboard) của điện thoại. | 1. Trường tổng tiền hiển thị dạng text tĩnh, không cho phép focus.<br>2. Bàn phím ảo không xuất hiện và người dùng không thể nhập liệu thay đổi giá trị. | Kết quả giống ER | Pass | NMQuang | 02-07-2026 |
+| FR-20 | TC-FR20-004 | Backend tự tính toán lại tổng tiền và chặn thao túng giá trị đơn hàng từ Client | Người dùng đã đăng nhập tài khoản test. Đã Open JS Debugger trên Expo Go. Có tool để test API (ví dụ Postman...) | 1. Đăng nhập tài khoản test và thêm sản phẩm trị giá 30,000,000 ₫ vào giỏ hàng.<br>2. Mở trình JS Debugger trên Expo Go và xem tab Network.<br>3. Trên thiết bị di động, bấm nút "Tiến hành thanh toán".<br>4. Tìm request `checkout` trong tab Network, sao chép (copy) các thông tin cần thiết (URL, Headers, Body) sang tool API.<br>5. Thay đổi giá trị tham số `total_amount` trong Body request thành `1,000` ₫ rồi nhấn gửi request.<br>6. Xem lịch sử đơn hàng để đối chiếu số tiền thanh toán thực tế. | Backend tự động tính toán lại tổng tiền từ giỏ hàng trong cơ sở dữ liệu (hoặc chặn request do sai lệch thông tin), đơn hàng được ghi nhận với giá trị thực tế là 30,000,000 ₫. | Hệ thống chấp nhận giá trị 1,000 ₫ gửi lên từ Client và lưu đơn hàng thành công với giá tiền bị thao túng. | Fail | NMQuang | 05-07-2026 |
+| FR-20 | TC-FR20-005 | Kiểm thử biên dưới số lượng sản phẩm thanh toán (BVA - LB/LB+1) | Người dùng đã đăng nhập tài khoản test. | 1. Thêm 1 sản phẩm A (số lượng 1) và 1 sản phẩm B (số lượng 2) vào giỏ.<br>2. Điều hướng tới màn hình Checkout trên ứng dụng di động và chạm nút "Tiến hành thanh toán". | Màn hình Checkout hiển thị đúng số lượng sản phẩm A là 1 và B là 2. | Kết quả giống ER | Pass | NMQuang | 02-07-2026 |
+| FR-20 | TC-FR20-006 | Chặn thanh toán khi giỏ hàng trống (EC04) | Người dùng đã đăng nhập tài khoản test. Giỏ hàng trống không có sản phẩm. | 1. Đăng nhập tài khoản test khi giỏ hàng trống.<br>2. Mở màn hình Giỏ hàng.<br>3. Quan sát màn hình. | Ứng dụng hiển thị thông báo giỏ hàng trống và nút "Tiếp tục mua sắm" điều hướng người dùng về trang chủ. | Kết quả giống ER | Pass | NMQuang | 02-07-2026 |
+
+
