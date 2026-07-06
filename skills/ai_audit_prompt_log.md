@@ -31,7 +31,7 @@ my device is Daikin Inverter 1 HP FTKC25QVMV, search for more information then D
 
 ---
 
-## 3. Quy trình Lập báo cáo AI Audit (`AI_Templates/AI_Audit_Report.md`)
+## 3. Quy trình Lập báo cáo AI Audit (`AI_Audit_Report.md`)
 Khi hoàn thành một tác vụ quan trọng bằng AI, phải đối chiếu kết quả của AI với tài liệu kỹ thuật hoặc kiến thức chuẩn để đánh giá chất lượng. 
 
 ### 3.1. Cấu trúc bảng Audit cho mỗi tác vụ:
