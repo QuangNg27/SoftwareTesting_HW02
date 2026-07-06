@@ -1,11 +1,6 @@
 # Báo cáo Kiểm thử HW02 - Domain Testing & BVA on EShop
 
-## 1. Tuyên bố Sử dụng AI (AI Declaration)
-Tôi sử dụng AI trợ lý (Gemini) để hỗ trợ phân tích miền, phân tích giá trị biên và thiết kế các kịch bản kiểm thử trong bài tập này. Toàn bộ lịch sử các prompt được ghi nhận chi tiết tại file [promt_log.md](file:///d:/NAM_3/HK3/KTPM/HW02/SoftwareTesting_HW02/promt_log.md).
-
----
-
-## 2. Danh sách Tính năng Kiểm thử (Features Table)
+## 1. Danh sách Tính năng Kiểm thử (Features Table)
 
 | ID | Feature Name | Description |
 | :--- | :--- | :--- |
@@ -17,11 +12,11 @@ Tôi sử dụng AI trợ lý (Gemini) để hỗ trợ phân tích miền, phâ
 
 ---
 
-## 3. Chi tiết Phân tích Miền & Giá trị Biên (Domain Testing & BVA Analysis)
+## 2. Chi tiết Phân tích Miền & Giá trị Biên (Domain Testing & BVA Analysis)
 
-### 3.1. Tính năng FR-05: Xem danh sách & Tìm kiếm sản phẩm
+### 2.1. Tính năng FR-05: Xem danh sách & Tìm kiếm sản phẩm
 
-#### 3.1.1. Phân tích Lớp tương đương (Equivalence Classes) cho FR-05
+#### 2.1.1. Phân tích Lớp tương đương (Equivalence Classes) cho FR-05
 
 *   **Bước 1: Xác định biến Đầu vào (Input) & Đầu ra (Output)**
     *   **Đầu vào:** `searchQuery` (Kiểu dữ liệu: Chuỗi ký tự - String. Độ dài $L$ từ $0$ đến $255$ ký tự).
@@ -50,7 +45,7 @@ Tôi sử dụng AI trợ lý (Gemini) để hỗ trợ phân tích miền, phâ
 | 8 | Gửi request tìm kiếm (ví dụ: `searchQuery = "iPhone"`) khi mạng chậm | Trong thời gian chờ phản hồi từ API, màn hình phải hiển thị trạng thái đang tải dữ liệu rõ ràng (Loading spinner/indicator). | Trạng thái Loading (Loading State) |
 | 9 | Nhấn phím Tab liên tục từ thanh địa chỉ | Thứ tự tiêu điểm di chuyển một cách tuần tự từ trên xuống dưới, từ trái sang phải, không nhảy cóc hoặc bỏ sót phần tử tương tác chính. | Phím Tab (Tab Order) |
 
-#### 3.1.2. Phân tích Giá trị Biên (BVA) cho FR-05
+#### 2.1.2. Phân tích Giá trị Biên (BVA) cho FR-05
 Giới hạn độ dài chuỗi tìm kiếm đầu vào: $0 \le L \le 255$.
 *   **Biên dưới ($LB = 0$):**
     *   $L = 0$ (LB): Chuỗi tìm kiếm rỗng (độ dài bằng 0).
@@ -72,9 +67,9 @@ Giới hạn độ dài chuỗi tìm kiếm đầu vào: $0 \le L \le 255$.
 
 ---
 
-### 3.2. Tính năng FR-09: Mã Giảm Giá (Coupon)
+### 2.2. Tính năng FR-09: Mã Giảm Giá (Coupon)
 
-#### 3.2.1. Phân tích Lớp tương đương (Equivalence Classes) cho FR-09
+#### 2.2.1. Phân tích Lớp tương đương (Equivalence Classes) cho FR-09
 
 *   **Bước 1: Xác định biến Đầu vào (Input) & Đầu ra (Output)**
     *   **Đầu vào:**
@@ -119,7 +114,7 @@ Giới hạn độ dài chuỗi tìm kiếm đầu vào: $0 \le L \le 255$.
 | 7 | `"SUPERFIX"` (giảm cố định `400,000 ₫`) | `300,000 ₫` | `True` | `0` | 1. Mã được áp dụng thành công.<br>2. Số tiền thanh toán cuối cùng hiển thị tối thiểu là 0 ₫ (không hiển thị số tiền âm). | `EC14` (Hợp lệ - Biên) |
 | 8 | `"  VIP100  "` | `350,000 ₫` | `True` | `0` | 1. Hệ thống tự động cắt bỏ các khoảng trắng thừa ở đầu và cuối.<br>2. Mã giảm giá được áp dụng thành công. | `EC01` (Hợp lệ) |
 
-#### 3.2.2. Phân tích Giá trị Biên (BVA) cho FR-09
+#### 2.2.2. Phân tích Giá trị Biên (BVA) cho FR-09
 
 Áp dụng BVA cho hai biến định lượng có ngưỡng giới hạn:
 1.  **Tổng đơn hàng (`orderTotal`) đối với điều kiện C3 (`min_order_amount`):**
@@ -145,9 +140,9 @@ Giới hạn độ dài chuỗi tìm kiếm đầu vào: $0 \le L \le 255$.
 
 ---
 
-### 3.3. Tính năng FR-14: Quản lý Danh mục (Category CRUD)
+### 2.3. Tính năng FR-14: Quản lý Danh mục (Category CRUD)
 
-#### 3.3.1. Phân tích Lớp tương đương (Equivalence Classes) cho FR-14
+#### 2.3.1. Phân tích Lớp tương đương (Equivalence Classes) cho FR-14
 
 *   **Bước 1: Xác định biến Đầu vào (Input) & Đầu ra (Output)**
     *   **Đầu vào:**
@@ -183,7 +178,7 @@ Giới hạn độ dài chuỗi tìm kiếm đầu vào: $0 \le L \le 255$.
 | 8 | `N/A` (Thao tác Xóa) | `456` | `True` | Hệ thống ngăn chặn hành động xóa và hiển thị thông báo lỗi ràng buộc để bảo vệ tính toàn vẹn dữ liệu. | `EC08` (Ràng buộc) |
 | 9 | `"Laptop"` (Đã tồn tại) | `N/A` | `N/A` | Hệ thống kiểm tra và thông báo lỗi trùng lặp tên danh mục, không cho phép lưu danh mục trùng. | `EC04` (Không hợp lệ) |
 
-#### 3.3.2. Phân tích Giá trị Biên (BVA) cho FR-14
+#### 2.3.2. Phân tích Giá trị Biên (BVA) cho FR-14
 Áp dụng BVA cho độ dài tên danh mục (`L`):
 *   **Biên dưới ($L = 1$):**
     *   `L = 0` (Dưới biên): Chuỗi rỗng `""` $\rightarrow$ Hệ thống báo lỗi "Tên danh mục là bắt buộc" hoặc tương đương.
@@ -202,9 +197,9 @@ Giới hạn độ dài chuỗi tìm kiếm đầu vào: $0 \le L \le 255$.
 
 ---
 
-### 3.4. Tính năng FR-20: Thanh toán (Checkout)
+### 2.4. Tính năng FR-20: Thanh toán (Checkout)
 
-#### 3.4.1. Phân tích Lớp tương đương (Equivalence Classes) cho FR-20 (Thanh toán)
+#### 2.4.1. Phân tích Lớp tương đương (Equivalence Classes) cho FR-20 (Thanh toán)
 
 *   **Bước 1: Xác định biến Đầu vào (Input) & Đầu ra (Output)**
     *   **Đầu vào:**
@@ -237,7 +232,7 @@ Giới hạn độ dài chuỗi tìm kiếm đầu vào: $0 \le L \le 255$.
 | 4 | `True` | `[1 chiếc iPhone 15 Pro Max]` | `1,000 ₫` (thao túng) | Backend bỏ qua giá trị client gửi lên và tự động tính toán từ giỏ hàng trong cơ sở dữ liệu, ghi nhận đơn hàng với giá trị thực tế là 30,000,000 ₫ (hoặc từ chối yêu cầu do sai lệch thông tin). | `EC07` (Không hợp lệ - Thao túng) |
 | 5 | `True` | `[]` (Trống) | `0 ₫` | 1. Nút "Thanh toán" ở màn hình Giỏ hàng hiển thị ở trạng thái vô hiệu hóa (disabled) không thể chạm vào.<br>2. Ứng dụng chặn điều hướng đến màn hình Checkout và hiển thị màn hình Empty State của Giỏ hàng. | `EC04` (Không hợp lệ) |
 
-#### 3.4.2. Phân tích Giá trị Biên (BVA) cho FR-20 (Thanh toán)
+#### 2.4.2. Phân tích Giá trị Biên (BVA) cho FR-20 (Thanh toán)
 
 Áp dụng BVA cho các biến định lượng có ngưỡng giới hạn:
 1.  **Số lượng sản phẩm trong giỏ (`quantity`):**
@@ -256,13 +251,11 @@ Giới hạn độ dài chuỗi tìm kiếm đầu vào: $0 \le L \le 255$.
 | :---: | :--- | :--- | :--- | :--- | :--- |
 | 1 | `True` | `[SP A (SL: 1), SP B (SL: 2)]` | `[Tổng tiền tương ứng]` | 1. Màn hình Checkout hiển thị đúng số lượng sản phẩm A là 1 và B là 2.<br>2. Ứng dụng đặt hàng thành công và giỏ hàng được xóa sạch. | Biên dưới số lượng sản phẩm (`quantity = 1` và `quantity = 2`) |
 
-
-
 ---
 
-## 4. Kịch bản Kiểm thử Chi tiết (Test Cases)
+## 3. Kịch bản Kiểm thử Chi tiết (Test Cases)
 
-### 4.1. Kịch bản kiểm thử cho FR-05: Xem danh sách & Tìm kiếm sản phẩm
+### 3.1. Kịch bản kiểm thử cho FR-05: Xem danh sách & Tìm kiếm sản phẩm
 
 | Function/Feature ID | Case ID | Test case name | Pre-requisites / Conditions | Test step | Expected Result (ER) | Actual Result | Status | Tester | Tested Date |
 | :---: | :---: | :--- | :--- | :--- | :--- | :--- | :---: | :--- | :---: |
@@ -282,7 +275,7 @@ Giới hạn độ dài chuỗi tìm kiếm đầu vào: $0 \le L \le 255$.
 
 ---
 
-### 4.2. Kịch bản kiểm thử cho FR-09: Mã Giảm Giá (Coupon)
+### 3.2. Kịch bản kiểm thử cho FR-09: Mã Giảm Giá (Coupon)
 
 | Function/Feature ID | Case ID | Test case name | Pre-requisites / Conditions | Test step | Expected Result (ER) | Actual Result | Status | Tester | Tested Date |
 | :---: | :---: | :--- | :--- | :--- | :--- | :--- | :---: | :--- | :---: |
@@ -302,7 +295,7 @@ Giới hạn độ dài chuỗi tìm kiếm đầu vào: $0 \le L \le 255$.
 
 ---
 
-### 4.3. Kịch bản kiểm thử cho FR-14: Quản lý Danh mục (Category CRUD)
+### 3.3. Kịch bản kiểm thử cho FR-14: Quản lý Danh mục (Category CRUD)
 
 | Function/Feature ID | Case ID | Test case name | Pre-requisites / Conditions | Test step | Expected Result (ER) | Actual Result | Status | Tester | Tested Date |
 | :---: | :---: | :--- | :--- | :--- | :--- | :--- | :---: | :--- | :---: |
@@ -320,7 +313,7 @@ Giới hạn độ dài chuỗi tìm kiếm đầu vào: $0 \le L \le 255$.
 
 ---
 
-### 4.4. Kịch bản kiểm thử cho FR-20: Thanh toán (Checkout)
+### 3.4. Kịch bản kiểm thử cho FR-20: Thanh toán (Checkout)
 
 | Function/Feature ID | Case ID | Test case name | Pre-requisites / Conditions | Test step | Expected Result (ER) | Actual Result | Status | Tester | Tested Date |
 | :---: | :---: | :--- | :--- | :--- | :--- | :--- | :---: | :--- | :---: |
@@ -331,4 +324,8 @@ Giới hạn độ dài chuỗi tìm kiếm đầu vào: $0 \le L \le 255$.
 | FR-20 | TC-FR20-005 | Kiểm thử biên dưới số lượng sản phẩm thanh toán (BVA - LB/LB+1) | Người dùng đã đăng nhập tài khoản test. | 1. Thêm 1 sản phẩm A (số lượng 1) và 1 sản phẩm B (số lượng 2) vào giỏ.<br>2. Điều hướng tới màn hình Checkout trên ứng dụng di động và chạm nút "Tiến hành thanh toán". | Màn hình Checkout hiển thị đúng số lượng sản phẩm A là 1 và B là 2. | Kết quả giống ER | Pass | NMQuang | 02-07-2026 |
 | FR-20 | TC-FR20-006 | Chặn thanh toán khi giỏ hàng trống (EC04) | Người dùng đã đăng nhập tài khoản test. Giỏ hàng trống không có sản phẩm. | 1. Đăng nhập tài khoản test khi giỏ hàng trống.<br>2. Mở màn hình Giỏ hàng.<br>3. Quan sát màn hình. | Ứng dụng hiển thị thông báo giỏ hàng trống và nút "Tiếp tục mua sắm" điều hướng người dùng về trang chủ. | Kết quả giống ER | Pass | NMQuang | 02-07-2026 |
 
+---
 
+## 4. AI Gap Analysis
+
+Test case TC-FR09-013 là một test case bị AI bỏ sót khi phân tích. Test case này kiểm thử trường hợp người dùng đăng xuất thì có thể áp dụng mã giảm giá không. Trước đó AI nó chỉ tạo test case TC-FR09-008 đi tới trang thanh toán thông qua giỏ hàng nên app luôn bắt đăng nhập dẫn đến không kiểm tra được. Có thể lý do là vì AI không nghĩ được là bấm đăng xuất xong rồi mà màn hình thanh toán vẫn còn và vẫn có thể áp dụng mã giảm giá đồng thời do AI dùng đặc tả để phân tích test nên chỉ quan tâm đến trường hợp trong đặc tả.

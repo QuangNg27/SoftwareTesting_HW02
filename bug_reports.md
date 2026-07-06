@@ -1,7 +1,5 @@
 # Danh sách Báo cáo Lỗi (Bug Reports) - HW02
 
-Dưới đây là bảng quản lý các lỗi phát hiện được trong quá trình kiểm thử hệ thống EShop. Bảng được thiết kế theo đúng quy chuẩn định nghĩa trong tài liệu hướng dẫn kiểm thử.
-
 | Defect ID | Defect Title | Defect Description | Function ID | Severity | Reported By | Date Reported | Status | Comment |
 | :---: | :--- | :--- | :---: | :---: | :--- | :---: | :---: | :--- |
 | **B001** | [Trang chủ] Giá sản phẩm hiển thị đơn vị "VND" thay vì ký hiệu "₫" | **Pre-conditions:**<br>Cơ sở dữ liệu đã khởi tạo và có sẵn dữ liệu sản phẩm mẫu.<br>**Steps to Reproduce:**<br>1. Truy cập URL trang chủ của khách hàng (`http://localhost:5173`).<br>2. Quan sát giao diện danh sách sản phẩm.<br>3. Kiểm tra mã nguồn HTML của trang chủ.<br>**Actual Result:** Giá hiển thị đơn vị "VND" thay vì "₫".<br>**Expected Result:** Mỗi sản phẩm hiển thị đủ: Ảnh sản phẩm, Tên sản phẩm, Giá bán (định dạng VND với ký hiệu `₫`, phân tách hàng nghìn, ví dụ: `30,000,000 ₫`).<br>**Environment:** Windows 11, Chrome v149.0.7827.104. | FR-05 | Low | NMQuang | 17-06-2026 | Open | Lỗi hiển thị, vi phạm FR-05 |
@@ -21,22 +19,3 @@ Dưới đây là bảng quản lý các lỗi phát hiện được trong quá 
 | **B015** | [Admin - Danh mục] Cho phép thêm danh mục trùng tên với danh mục hiện có | **Pre-conditions:**<br>Tài khoản admin đã đăng nhập. Danh mục "Laptop" đã tồn tại sẵn trong hệ thống.<br>**Steps to Reproduce:**<br>1. Nhập tên danh mục `"Laptop"` vào ô nhập tên danh mục.<br>2. Nhấn nút "Thêm mới".<br>**Actual Result:** Hệ thống thêm danh mục trùng tên "Laptop" thành công tạo ra bản ghi bị nhân bản dữ liệu.<br>**Expected Result:** Hệ thống kiểm tra trùng lặp và ngăn chặn không cho phép lưu danh mục trùng tên.<br>**Environment:** Windows 11, Chrome v149.0.7827.104. | FR-14 | Medium | NMQuang | 20-06-2026 | Open | Thiếu logic validation trùng tên danh mục |
 | **B016** | [Checkout - Coupon] Áp dụng mã giảm giá thành công khi người dùng đã đăng xuất (chưa đăng nhập) | **Pre-conditions:**<br>Cơ sở dữ liệu hoạt động bình thường, mã giảm giá `SAVE10` hoạt động (giảm 10%, tối thiểu 300,000 ₫).<br>**Steps to Reproduce:**<br>1. Đăng nhập tài khoản test.<br>2. Thêm sản phẩm vào giỏ hàng sao cho tổng giá trị đạt tối thiểu 300,000 ₫.<br>3. Đi tới trang Checkout.<br>4. Bấm đăng xuất.<br>5. Nhập mã `"SAVE10"` và nhấn Áp dụng.<br>**Actual Result:** Hệ thống áp dụng giảm giá thành công, trả về trạng thái giảm giá và tổng tiền thanh toán mới.<br>**Expected Result:** Hệ thống từ chối áp dụng và hiển thị thông báo lỗi yêu cầu đăng nhập trước khi áp dụng mã giảm giá.<br>**Environment:** Windows 11, Chrome v149.0.7827.104. | FR-09 | High | NMQuang | 02-07-2026 | Open | Vi phạm điều kiện C4 (Đã đăng nhập) của mã giảm giá |
 | **B017** | [Mobile - Checkout] Lỗ hổng bảo mật thao túng giá trị đơn hàng | **Pre-conditions:**<br>Người dùng đã đăng nhập tài khoản test. Đã Open JS Debugger trên Expo Go. Có tool để test API (ví dụ Postman...). Giỏ hàng có sản phẩm trị giá 30,000,000 ₫.<br>**Steps to Reproduce:**<br>1. Đăng nhập tài khoản test và thêm sản phẩm trị giá 30,000,000 ₫ vào giỏ hàng.<br>2. Mở trình JS Debugger trên Expo Go và xem tab Network.<br>3. Trên thiết bị di động, bấm nút "Tiến hành thanh toán".<br>4. Tìm request `checkout` trong tab Network, sao chép (copy) các thông tin cần thiết (URL, Headers, Body) sang tool API (như Postman).<br>5. Thay đổi giá trị tham số `total_amount` trong Body request thành `1,000` ₫ rồi nhấn gửi request.<br>6. Xem lịch sử đơn hàng để đối chiếu số tiền thanh toán thực tế.<br>**Actual Result:** Hệ thống chấp nhận giá trị 1,000 ₫ gửi lên từ Client và lưu đơn hàng thành công với giá tiền bị thao túng.<br>**Expected Result:** Backend tự động tính toán lại tổng tiền từ giỏ hàng trong cơ sở dữ liệu (hoặc chặn request do sai lệch thông tin), đơn hàng được ghi nhận với giá trị thực tế là 30,000,000 ₫.<br>**Environment:** Android/iOS Emulator (Expo Go), Postman, Node.js Backend. | FR-20 | Critical | NMQuang | 05-07-2026 | Open | Lỗ hổng bảo mật nghiêm trọng cho phép người dùng thay đổi giá trị đơn hàng trước khi gửi thanh toán. |
-
-
----
-
-## Hướng dẫn sử dụng bảng Báo cáo Lỗi (Bug Report Guidelines)
-
-1. **Defect ID:** Đánh mã tăng dần duy nhất (`B001`, `B002`, `B003`,...).
-2. **Defect Title:** Đặt tên ngắn gọn, súc tích theo cấu trúc: `[Tên_Mô_đun] Hành vi lỗi - Trong điều kiện nào`.
-3. **Defect Description:** Cung cấp đầy đủ các thông tin:
-   * **Pre-conditions:** Trạng thái hệ thống trước khi thực hiện test.
-   * **Steps to Reproduce:** Đánh số thứ tự các bước để bất kỳ ai cũng có thể thực hiện lại và thấy lỗi.
-   * **Actual Result & Expected Result:** Chỉ rõ sự khác biệt giữa thực tế lỗi và tài liệu đặc tả yêu cầu.
-   * **Environment:** Ghi lại hệ điều hành, trình duyệt và phiên bản kiểm thử.
-4. **Severity:** Chọn một trong các mức độ nghiêm trọng:
-   * `Critical` (Khẩn cấp - Crash hệ thống, bảo mật nghiêm trọng).
-   * `High` (Cao - Sai logic nghiệp vụ chính, không có giải pháp thay thế).
-   * `Medium` (Trung bình - Lỗi tính năng phụ, có cách tránh tạm thời).
-   * `Low` (Thấp - Lỗi giao diện UI, sai chính tả).
-5. **Đính kèm minh chứng:** Đối với mỗi lỗi tìm thấy, cần chụp ảnh màn hình lỗi (screenshot) và tải lên làm minh chứng khi tạo GitHub Issues trên trang của nhóm.
