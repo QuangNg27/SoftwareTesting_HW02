@@ -272,9 +272,3 @@ Báo cáo này thực hiện audit các kết quả do AI sinh ra trong suốt q
 | INVALID | 1 | 9.1% |
 | INCOMPLETE | 10 | 90.9% |
 | **Tổng số tác vụ kiểm định** | **11** | **100%** |
-
-## 3. AI Critique
-
-Qua quá trình test, AI thể hiện rõ cả điểm mạnh lẫn hạn chế: AI mắc sai sót như tự nhận diện sai ID tính năng (FR-20 thành FR-08) và mặc định môi trường Web (sử dụng thao tác click chuột...) thay vì môi trường di động trên Expo Go theo yêu cầu đề bài. Bên cạnh đó, các kết quả sinh ra thường incomplete vì AI bỏ qua các kịch bản kiểm thử bảo mật nâng cao và các luồng nghiệp vụ phức tạp đòi hỏi sự phối hợp giữa nhiều trạng thái hệ thống (như việc đăng xuất ngay trước khi áp dụng mã coupon ở màn hình Checkout). Nguyên nhân chủ yếu là do AI thiếu ngữ cảnh thực tế của hệ thống đang chạy (SUT) và chỉ hoạt động dựa trên việc suy diễn văn bản tĩnh từ đặc tả, ngoài ra là do promt chưa chính xác dẫn đến AI hiểu sai. 
-
-Bài học và nguyên tắc cốt lõi rút ra là AI chỉ đóng vai trò là một trợ lý hỗ trợ soạn thảo khung tài liệu và gợi ý ban đầu. Người tester bắt buộc phải đóng vai trò chủ đạo, trực tiếp tư duy và phân tích, từ đó đưa cho AI các thông tin chính xác để thiết kế các test case tự động bám sát với specification và chịu trách nhiệm cuối cùng cho chất lượng sản phẩm.
