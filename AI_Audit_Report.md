@@ -1,4 +1,4 @@
-# AI Audit and Critique Report - HW02
+# AI Audit Report - HW02
 
 Báo cáo này thực hiện audit các kết quả do AI sinh ra trong suốt quá trình thiết kế kịch bản kiểm thử cho dự án EShop, đối chiếu sự khác biệt giữa kết quả đề xuất của AI và bản hiệu chỉnh thực tế của sinh viên.
 
