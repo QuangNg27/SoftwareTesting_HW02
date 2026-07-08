@@ -1,5 +1,8 @@
 # Danh sách Báo cáo Lỗi (Bug Reports) - HW02
 
+Link Github Issue chứa bug sreenshots: https://github.com/nguyenhieuthuan3105/EShop-Testing-HW02-Group04
+
+---
 | Defect ID | Defect Title | Defect Description | Function ID | Severity | Reported By | Date Reported | Status | Comment |
 | :---: | :--- | :--- | :---: | :---: | :--- | :---: | :---: | :--- |
 | **B001** | [Trang chủ] Giá sản phẩm hiển thị đơn vị "VND" thay vì ký hiệu "₫" | **Pre-conditions:**<br>Cơ sở dữ liệu đã khởi tạo và có sẵn dữ liệu sản phẩm mẫu.<br>**Steps to Reproduce:**<br>1. Truy cập URL trang chủ của khách hàng (`http://localhost:5173`).<br>2. Quan sát giao diện danh sách sản phẩm.<br>3. Kiểm tra mã nguồn HTML của trang chủ.<br>**Actual Result:** Giá hiển thị đơn vị "VND" thay vì "₫".<br>**Expected Result:** Mỗi sản phẩm hiển thị đủ: Ảnh sản phẩm, Tên sản phẩm, Giá bán (định dạng VND với ký hiệu `₫`, phân tách hàng nghìn, ví dụ: `30,000,000 ₫`).<br>**Environment:** Windows 11, Chrome v149.0.7827.104. | FR-05 | Low | NMQuang | 17-06-2026 | Open | Lỗi hiển thị, vi phạm FR-05 |

@@ -1,4 +1,4 @@
-# Báo cáo Kiểm thử HW02 - Domain Testing & BVA on EShop
+# Báo cáo Kiểm thử HW02 - Domain Testing on EShop
 
 ## 1. Danh sách Tính năng Kiểm thử (Features Table)
 

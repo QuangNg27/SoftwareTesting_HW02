@@ -1,0 +1,209 @@
+* commit aefea2b5c5fd29a742e27dc5d68919e9dd14ae3c
+| Author: QuangNg <qag2702@gmail.com>
+| Date:   Wed Jul 8 09:43:14 2026 +0700
+| 
+|     update promt_log
+| 
+|  promt_log.md | 242 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+|  1 file changed, 242 insertions(+)
+| 
+* commit 712a3ede076453d64b5c4c3724dcde53209c9d06
+| Author: QuangNg <qag2702@gmail.com>
+| Date:   Wed Jul 8 09:42:23 2026 +0700
+| 
+|     seperate skill bug report and build test case into different files + improve skill AI audit report
+| 
+|  skills/ai_audit_prompt_log.md  | 35 +++++++++++++----
+|  skills/bug_report.md           | 35 +++++++++++++++++
+|  skills/build_test_case.md      | 42 ++++++++++++++++++++
+|  skills/test_case_bug_report.md | 82 ----------------------------------------
+|  4 files changed, 104 insertions(+), 90 deletions(-)
+| 
+* commit d9f58369ccaa4ae0a8094e96a3b1ce701c40a46c
+| Author: QuangNg <qag2702@gmail.com>
+| Date:   Tue Jul 7 20:32:11 2026 +0700
+| 
+|     remove AI critique part in audit report
+| 
+|  AI_Audit_Report.md | 8 +-------
+|  1 file changed, 1 insertion(+), 7 deletions(-)
+| 
+* commit 994aff719cd56e6cff6322759a84def1f6bb600a
+| Author: QuangNg <qag2702@gmail.com>
+| Date:   Tue Jul 7 20:31:15 2026 +0700
+| 
+|     Seperate AI critique part from AI audit report
+| 
+|  AI_Audit_Report.md | 2 +-
+|  AI_Critique.md     | 5 +++++
+|  2 files changed, 6 insertions(+), 1 deletion(-)
+| 
+* commit f807e45f0d22254c045b6aef53c2a4e99c515b8c
+| Author: QuangNg <qag2702@gmail.com>
+| Date:   Mon Jul 6 16:18:07 2026 +0700
+| 
+|     update ai audit report + ai gap analysis in main report + README file
+| 
+|  AI_Audit_Report.md | 280 +++++++++++++++++++++++++++++++++++++++++++++++++++
+|  README.md          |  31 +++++-
+|  bug_reports.md     |  21 ----
+|  hw02_report.md     |  49 +++++----
+|  4 files changed, 333 insertions(+), 48 deletions(-)
+| 
+* commit b8ebdc7926de05e330af772c5496784572dec220
+| Author: QuangNg <qag2702@gmail.com>
+| Date:   Mon Jul 6 11:36:22 2026 +0700
+| 
+|     update skill ai audit
+| 
+|  skills/ai_audit_prompt_log.md | 2 +-
+|  1 file changed, 1 insertion(+), 1 deletion(-)
+| 
+* commit c0f4cf28abdf9c9191e3fd9338b87433d2b88f46
+| Author: QuangNg <qag2702@gmail.com>
+| Date:   Mon Jul 6 10:38:17 2026 +0700
+| 
+|     Update skill domain testing
+| 
+|  skills/domain_testing_bva.md | 107 +++++++++++++++++++----------------------
+|  1 file changed, 50 insertions(+), 57 deletions(-)
+| 
+* commit 6e789bb20b94ef0cee9d775350a9510033d56878
+| Author: QuangNg <qag2702@gmail.com>
+| Date:   Sun Jul 5 20:41:22 2026 +0700
+| 
+|     - Separate Equivalent Class examples into a dedicated 'Test Data' step in the Domain Testing Report.
+|     - Adjust test case TC-FR20-004 and update its Actual Result (including bug).
+| 
+|  bug_reports.md |   2 +-
+|  hw02_report.md | 170 ++++++++++++++++++++++++++++++++++++++++++++++++-------
+|  2 files changed, 151 insertions(+), 21 deletions(-)
+| 
+* commit e4de93a1e0877d88bb0224076410c076a22ae8f5
+| Author: QuangNg <qag2702@gmail.com>
+| Date:   Thu Jul 2 17:48:07 2026 +0700
+| 
+|     Update a test case missed by AI for FR-09
+| 
+|  bug_reports.md | 2 ++
+|  hw02_report.md | 1 +
+|  2 files changed, 3 insertions(+)
+| 
+* commit 2bf2d2698a4eccd3dfb4d638ee163e83764560d0
+| Author: QuangNg <qag2702@gmail.com>
+| Date:   Mon Jun 22 16:06:25 2026 +0700
+| 
+|     Adjust description of bug B014
+| 
+|  bug_reports.md | 2 +-
+|  1 file changed, 1 insertion(+), 1 deletion(-)
+| 
+* commit 526b728626e33a9ac7aad269205d371030a69aa2
+| Author: QuangNg <qag2702@gmail.com>
+| Date:   Mon Jun 22 14:39:23 2026 +0700
+| 
+|     Adjust the wording of the test steps for TC-FR05-003 and TC-FR14-011
+| 
+|  hw02_report.md | 4 ++--
+|  1 file changed, 2 insertions(+), 2 deletions(-)
+| 
+* commit cdbe930a95c04ec9074356020d713d84154ad57d
+| Author: QuangNg <qag2702@gmail.com>
+| Date:   Sun Jun 21 23:10:03 2026 +0700
+| 
+|     Update bug report for feature FR-14
+| 
+|  bug_reports.md | 4 ++++
+|  1 file changed, 4 insertions(+)
+| 
+* commit d1b6b73197195008bd715383ed5985996116e313
+| Author: QuangNg <qag2702@gmail.com>
+| Date:   Sun Jun 21 23:09:38 2026 +0700
+| 
+|     Adjust actual result of FR-14 test cases
+| 
+|  hw02_report.md | 14 +++++++-------
+|  1 file changed, 7 insertions(+), 7 deletions(-)
+| 
+* commit 4ecacd5507cf3eeecc2dcb4644a89530a27f0bb9
+| Author: QuangNg <qag2702@gmail.com>
+| Date:   Sat Jun 20 15:51:28 2026 +0700
+| 
+|     Update actual test for FR-14 test cases
+| 
+|  hw02_report.md | 22 +++++++++++-----------
+|  1 file changed, 11 insertions(+), 11 deletions(-)
+| 
+* commit e6b3fe9bb04ee99da6aeb382802ec8d70a011673
+| Author: QuangNg <qag2702@gmail.com>
+| Date:   Sat Jun 20 14:50:03 2026 +0700
+| 
+|     Update test cases + bug report for FR-09 and test cases for FR-14
+| 
+|  bug_reports.md |   3 ++
+|  hw02_report.md | 124 ++++++++++++++++++++++++++++++++++++++++++++++++++-----
+|  2 files changed, 117 insertions(+), 10 deletions(-)
+|   
+*   commit 79408e78ad68cf79894a7018bec1fce2f0eca5bb
+|\  Merge: f410682 47cf5be
+| | Author: QuangNg <qag2702@gmail.com>
+| | Date:   Thu Jun 18 12:44:56 2026 +0700
+| | 
+| |     Merge branch 'main' of https://github.com/QuangNg27/SoftwareTesting_HW02
+| | 
+| * commit 47cf5be9a17fe76358f43cf52e400050a53f8399
+| | Author: Nguyen Minh Quang <163622058+QuangNg27@users.noreply.github.com>
+| | Date:   Wed Jun 17 16:09:48 2026 +0700
+| | 
+| |     Delete hw02.md
+| | 
+| |  hw02.md | 79 -------------------------------------------------------------
+| |  1 file changed, 79 deletions(-)
+| | 
+* | commit f410682f47a52918608fab4d7060be54004fa49f
+|/  Author: QuangNg <qag2702@gmail.com>
+|   Date:   Thu Jun 18 12:44:36 2026 +0700
+|   
+|       update bug report for FR-05
+|   
+|    bug_reports.md | 11 +++++++++--
+|    1 file changed, 9 insertions(+), 2 deletions(-)
+| 
+* commit 62e78ced06167fd51863080889521e9d8bba0b8a
+| Author: QuangNg <qag2702@gmail.com>
+| Date:   Wed Jun 17 16:09:04 2026 +0700
+| 
+|     Update actual results for FR-05 test cases
+| 
+|  hw02_report.md | 99 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+|  1 file changed, 99 insertions(+)
+| 
+* commit 486ef9963c616cc994604ec3c197cd1d9eed8218
+| Author: QuangNg <qag2702@gmail.com>
+| Date:   Tue Jun 16 16:19:38 2026 +0700
+| 
+|     update test case for FR-05 and create a template for bug report
+| 
+|  bug_reports.md | 26 +++++++++++++++++++
+|  hw02.md        | 79 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+|  2 files changed, 105 insertions(+)
+| 
+* commit d1b635a80e96db9040b35ab95f1ff51d9a3fc72e
+| Author: QuangNg <qag2702@gmail.com>
+| Date:   Tue Jun 9 22:02:45 2026 +0700
+| 
+|     feat: add documentation for domain testing, bug reporting, and AI audit prompts
+| 
+|  skills/ai_audit_prompt_log.md  | 72 +++++++++++++++++++++++++++++++
+|  skills/domain_testing_bva.md   | 92 ++++++++++++++++++++++++++++++++++++++++
+|  skills/test_case_bug_report.md | 82 +++++++++++++++++++++++++++++++++++
+|  3 files changed, 246 insertions(+)
+| 
+* commit 212044337973c238a33a5ffca97f84cecc159832
+  Author: Nguyen Minh Quang <163622058+QuangNg27@users.noreply.github.com>
+  Date:   Mon Jun 8 21:53:29 2026 +0700
+  
+      Initial commit
+  
+   README.md | 1 +
+   1 file changed, 1 insertion(+)
