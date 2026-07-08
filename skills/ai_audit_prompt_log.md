@@ -34,14 +34,20 @@ my device is Daikin Inverter 1 HP FTKC25QVMV, search for more information then D
 ## 3. Quy trình Lập báo cáo AI Audit (`AI_Audit_Report.md`)
 Khi hoàn thành một tác vụ quan trọng bằng AI, phải đối chiếu kết quả của AI với tài liệu kỹ thuật hoặc kiến thức chuẩn để đánh giá chất lượng. 
 
-### 3.1. Cấu trúc bảng Audit cho mỗi tác vụ:
-| Mục | Nội dung | Hướng dẫn chi tiết |
-| :--- | :--- | :--- |
-| **Prompt + tool** | Câu lệnh + Công cụ sử dụng | Ghi rõ prompt chính kèm theo tên công cụ và thời gian thực hiện. |
-| **AI output** | Kết quả đầu ra của AI | Trích dẫn kết quả đầu ra hoặc đường dẫn ảnh chụp màn hình (ví dụ: `![Alt Text](image/abc.png)`) khoanh đỏ phần lỗi. |
-| **Verdict** | Đánh giá | Chỉ chọn một trong ba trạng thái: **VALID** / **INVALID** / **INCOMPLETE**. |
-| **Reasoning** | Lý do đánh giá | Viết từ 2-5 câu giải thích rõ dựa trên tài liệu thiết bị, slide bài giảng hoặc tiêu chuẩn ISTQB. |
-| **Student fix** | Bản sửa đổi của sinh viên | Nội dung/Ảnh chụp màn hình sau khi sinh viên đã tự tay chỉnh sửa lại cho đúng. |
+### 3.1. Cấu trúc Báo cáo Audit cho mỗi tác vụ:
+Mỗi tác vụ kiểm định sẽ được trình bày tuần tự theo cấu trúc các đề mục và danh sách dưới đây để dễ dàng chèn nguyên văn phản hồi dài từ AI mà không làm vỡ định dạng:
+
+#### **Tác vụ [X]: [Tên Tác Vụ]**
+- **1. Prompt + tool (Câu lệnh + Công cụ):**
+  Ghi rõ prompt chính kèm theo tên công cụ và thời gian thực hiện.
+- **2. AI output (Kết quả đầu ra của AI):**
+  Trích xuất nguyên văn kết quả reply của AI trong phần chat (bọc trong khối mã ` ```text ... ``` `) hoặc đường dẫn ảnh chụp màn hình (ví dụ: `![Alt Text](image/abc.png)`) khoanh đỏ phần lỗi.
+- **3. Verdict (Đánh giá):**
+  Chỉ chọn một trong ba trạng thái: **VALID** / **INVALID** / **INCOMPLETE**.
+- **4. Reasoning (Lý do đánh giá):**
+  Viết từ 2-5 câu giải thích rõ dựa trên tài liệu thiết bị, slide bài giảng hoặc tiêu chuẩn ISTQB.
+- **5. Student fix (Bản sửa đổi của sinh viên):**
+  Nội dung/Ảnh chụp màn hình sau khi sinh viên đã tự tay chỉnh sửa lại cho đúng (bọc trong khối mã ` ``` ` hoặc đính kèm ảnh).
 
 ### 3.2. Tiêu chí đánh giá đầu ra (Verdict Guidelines):
 1. **VALID (Hợp lệ):** AI đáp ứng đầy đủ và chính xác tất cả các yêu cầu trong prompt, không bị sai lệch thông tin thực tế, không có lỗi ảo tưởng (hallucination) hay thiên vị (bias).
@@ -70,3 +76,16 @@ Kèm theo phần nhận xét đúc kết ngắn gọn:
 - **When to Use (Nên dùng khi nào):** Soạn thảo bản nháp, tạo khung tài liệu, chuyển đổi định dạng, gợi ý danh mục kiểm tra sơ bộ.
 - **When NOT to Use (Không nên dùng khi nào):** Xác minh tính đúng đắn của sự thật lịch sử/kỹ thuật, đưa ra quyết định an toàn/bảo mật, kiểm thử các tính năng phần cứng/vật lý thực tế.
 - **Key Principle (Nguyên tắc cốt lõi):** AI chỉ là trợ lý soạn thảo có thể sai sót, không phải là động cơ nghiên cứu có thẩm quyền. Sinh viên/Tester chịu trách nhiệm cuối cùng về chất lượng và độ chính xác của sản phẩm bàn giao.
+
+---
+
+## 5. Hướng dẫn AI Tự động Đồng bộ AI Output từ Nhật ký Hội thoại
+
+Khi thực hiện viết báo cáo `AI_Audit_Report.md`, do phản hồi cuối cùng của AI trong khung chat chỉ xuất hiện *sau khi* AI kết thúc lượt sinh file, AI cần tự động hóa việc đồng bộ này ở lượt tương tác tiếp theo như sau:
+
+1. **Đọc Nhật ký Hội thoại**: AI tự truy cập file log lịch sử cuộc gọi bằng cách tìm tệp nhật ký chat tại đường dẫn nhật ký hệ thống của IDE: `<appDataDir>\brain\<conversation-id>\.system_generated\logs\transcript_full.jsonl` (hoặc `transcript.jsonl`).
+2. **Trích xuất đoạn chat cuối**: Tìm kiếm dòng log gần nhất có `"source": "MODEL"` và `"type": "PLANNER_RESPONSE"` mà chứa nội dung văn bản chat của AI.
+3. **Cập nhật Báo cáo**: AI tự động ghi đè nội dung phản hồi chat đó vào phần **2. AI output** trong file `AI_Audit_Report.md` mà không cần người dùng thao tác hay tạo thêm file script bên ngoài.
+
+
+
