@@ -28,3 +28,11 @@
 | **FR-14** | Quản lý Danh mục (Category CRUD) | 11 | 11 | 6 | 5 | 0 | 3 (B013 - B015) |
 | **FR-20** | Thanh toán (Checkout) | 6 | 6 | 5 | 1 | 0 | 1 (B017) |
 | **Total** | | **43** | **43** | **22** | **21** | **0** | **17** |
+
+# Demo video sử dụng agent skill
+
+Youtube link: https://youtu.be/2jub84Bg8WI
+
+# Link repo github chứa nội dung bài làm
+
+Github Link: https://github.com/QuangNg27/SoftwareTesting_HW02

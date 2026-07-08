@@ -1,3 +1,14 @@
+* commit 25e7cc7c3c173e237eb315cb5891584657a69499
+| Author: QuangNg <qag2702@gmail.com>
+| Date:   Wed Jul 8 11:07:19 2026 +0700
+| 
+|     rename bug report file and title of main report + add git commit log file
+| 
+|  bug_reports.md => bug_report.md |   3 +
+|  git_commit_log.txt              | 209 ++++++++++++++++++++++++++++++++++++++
+|  hw02_report.md                  |   2 +-
+|  3 files changed, 213 insertions(+), 1 deletion(-)
+| 
 * commit aefea2b5c5fd29a742e27dc5d68919e9dd14ae3c
 | Author: QuangNg <qag2702@gmail.com>
 | Date:   Wed Jul 8 09:43:14 2026 +0700
